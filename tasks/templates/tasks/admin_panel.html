@@ -1,0 +1,31 @@
+{% extends "tasks/layout.html" %}
+
+{% block body %}
+
+    <div class="admin_panel">
+        <h1>ADMIN PANEL</h1>
+        <div class="new_task">
+            CREATE AND ASSIGN NEW TASK #TODO - form
+            <form action="{% url 'index' %}" method="post">
+                {% csrf_token %}
+                {{ task_form}}
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="all_tasks">
+            ALL TASKS #TODO
+            <p>display every task as a div, which can be clicked</p>
+        </div>
+        <div class="tasks_stats">
+            STATISTICS
+            <p>
+                Finished: x
+                In progress: y
+                Not done yet: z
+            </p>
+
+        </div>
+    </div>
+    
+
+{% endblock %}
