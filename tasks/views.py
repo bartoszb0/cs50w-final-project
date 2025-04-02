@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
@@ -9,7 +10,7 @@ from django.shortcuts import render
 
 from .forms import TaskForm
 
-from .models import User
+from .models import User, Task
 
 # Create your views here.
 def login_view(request):
@@ -61,7 +62,7 @@ def register_admin_view(request):
 
         # Attempt to create new user
         try:
-            user = User.objects.create_user(username, email, password, role='admin')
+            user = User.objects.create_user(username, email, password, role='Admin')
             user.save()
             if company != "":
                 user.company = company
@@ -84,11 +85,49 @@ def logout_view(request):
 
 @login_required
 def index(request):
-    if request.user.role != "admin":
+    if request.user.role != "Admin":
         return render(request, "tasks/index.html", {
             "username": request.user.username
         })
     else:
         return render(request, "tasks/admin_panel.html", {
-            "task_form": TaskForm
+            "task_form": TaskForm,
+            "tasks": Task.objects.filter(assigned_by=request.user).exclude(status="Done").order_by("deadline"),
+            "stats_finished": Task.objects.filter(assigned_by=request.user, status="Done").count(),
+            "stats_inprogress": Task.objects.filter(assigned_by=request.user, status="In progress").count(),
+            "stats_tbd": Task.objects.filter(assigned_by=request.user, status="To be done").count(),
         })
+    
+
+@login_required
+def add_assign_task(request):
+    if request.method == "POST" and request.user.role == "Admin":
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            new_task = Task(
+                name = form.cleaned_data["name"],
+                description = form.cleaned_data["description"],
+                deadline = form.cleaned_data["deadline"],
+                priority = form.cleaned_data["priority"],
+                assigned_to = User.objects.get(username=form.cleaned_data["assigned_to"]),
+                assigned_by = request.user
+            )
+            new_task.save()
+            messages.success(request, "Task created succesfully")
+            return HttpResponseRedirect(reverse('index'))
+        else:
+            messages.warning(request, "Task not created, please try again")
+            return HttpResponseRedirect(reverse('index'))
+    else:
+        return HttpResponseRedirect(reverse('index'))
+    
+
+@login_required
+def show_task(request, id):
+    task = Task.objects.get(id=id)
+    if task.assigned_to == request.user or task.assigned_by == request.user:
+        messages.success(request, "Authorized")
+        return HttpResponseRedirect(reverse('index'))
+    else:
+        messages.warning(request, "Unauthorized")
+        return HttpResponseRedirect(reverse('index'))

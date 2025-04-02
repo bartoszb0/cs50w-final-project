@@ -4,27 +4,54 @@
 
     <div class="admin_panel">
         <h1>ADMIN PANEL</h1>
+
         <div class="new_task">
-            CREATE AND ASSIGN NEW TASK #TODO - form
-            <form action="{% url 'index' %}" method="post">
+            CREATE AND ASSIGN NEW TASK
+            <form action="{% url 'add_assign_task' %}" method="post">
                 {% csrf_token %}
                 {{ task_form}}
                 <button type="submit">Submit</button>
             </form>
         </div>
-        <div class="all_tasks">
-            ALL TASKS #TODO
-            <p>display every task as a div, which can be clicked</p>
-        </div>
-        <div class="tasks_stats">
-            STATISTICS
-            <p>
-                Finished: x
-                In progress: y
-                Not done yet: z
-            </p>
 
+        <div class="all_tasks">
+            <strong>ALL TASKS</strong>
+            <table class="tasks_table">
+                <tr>
+                    <th>✓</th>
+                    <th class="name">Name</th>
+                    <th>Deadline</th>
+                    <th>Priority</th>
+                    <th>Assigned to</th>
+                    <th>Status</th>
+                </tr>
+                TODO ▣ - use this
+                {% for task in tasks %}
+                    <tr>
+                        <td class="checkbox">☐</td>
+                        <td><a href="{% url 'show_task' task.id %}">{{ task.name }}</a></td>
+                        <td>{{ task.deadline }}</td>
+                        <td>{{ task.priority }}</td>
+                        <td>{{ task.assigned_to }}</td>
+                        <td>{{ task.status }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" style="text-align: center;">No tasks available</td>
+                    </tr>
+                {% endfor %}
+            </table>
         </div>
+
+        <div class="tasks_stats">
+            <strong>STATISTICS</strong>
+            <p>
+                Finished: {{ stats_finished }} | 
+                In progress: {{ stats_inprogress }} | 
+                To be done: {{ stats_tbd }}
+            </p>
+        </div>
+
     </div>
     
 

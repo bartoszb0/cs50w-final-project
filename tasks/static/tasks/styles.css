@@ -45,16 +45,40 @@ div {
     flex-direction: column;
 }
 
-.new_task {
-    background-color: rgb(146, 111, 111);
-    height: auto;
-}
+    /* NEW TASK */
 
-.all_tasks {
-    background-color: rgb(117, 126, 76);
-    height: 400px;
-}
+    .new_task {
+        background-color: rgb(146, 111, 111);
+        height: auto;
+    }
 
-.tasks_stats {
-    background-color: #37526d;
-}
+    /* DISPLAY ALL TASKS */
+
+    .all_tasks {
+        margin-top: 20px;
+        height: auto;
+    }
+
+    .tasks_table {
+        width: 100%;
+    }
+
+    .tasks_table th {
+        background-color: #1c1f22;
+    }
+
+    .tasks_table .name {
+        width: 30%;
+    }
+
+    .tasks_table .checkbox:hover {
+        cursor: pointer;
+    }
+
+
+
+    /* STATISTICS */
+
+    .tasks_stats {
+        margin-top: 20px;
+    }
