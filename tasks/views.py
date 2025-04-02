@@ -94,7 +94,6 @@ def index(request):
             "task_form": TaskForm,
             "tasks": Task.objects.filter(assigned_by=request.user).exclude(status="Done").order_by("deadline"),
             "stats_finished": Task.objects.filter(assigned_by=request.user, status="Done").count(),
-            "stats_inprogress": Task.objects.filter(assigned_by=request.user, status="In progress").count(),
             "stats_tbd": Task.objects.filter(assigned_by=request.user, status="To be done").count(),
         })
     
@@ -123,7 +122,7 @@ def add_assign_task(request):
     
 
 @login_required
-def show_task(request, id):
+def show_task(request, id): #TODO - maybe delete this and use modal instead
     task = Task.objects.get(id=id)
     if task.assigned_to == request.user or task.assigned_by == request.user:
         messages.success(request, "Authorized")

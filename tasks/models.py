@@ -5,7 +5,7 @@ ROLE_CHOICES = [('Admin', 'Admin'), ('Staff', 'Staff')]
 
 PRIORITY_CHOICES = [('Low', 'Low'), ('Medium', 'Medium'), ('High', 'High')]
 
-STATUS_CHOICES = [('To be done', 'To be done'), ('In progress', 'In progress'), ('Done', 'Done')]
+STATUS_CHOICES = [('To be done', 'To be done'), ('Done', 'Done')]
 
 # Create your models here.
 class User(AbstractUser):

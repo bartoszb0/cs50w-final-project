@@ -3,7 +3,7 @@
 {% block body %}
 
     <div class="admin_panel">
-        <h1>ADMIN PANEL</h1>
+        <h2><strong>ADMIN PANEL</strong></h2>
 
         <div class="new_task">
             CREATE AND ASSIGN NEW TASK
@@ -15,7 +15,7 @@
         </div>
 
         <div class="all_tasks">
-            <strong>ALL TASKS</strong>
+            <h2><strong>ALL UNFINISHED TASKS</strong></h2>
             <table class="tasks_table">
                 <tr>
                     <th>✓</th>
@@ -23,17 +23,14 @@
                     <th>Deadline</th>
                     <th>Priority</th>
                     <th>Assigned to</th>
-                    <th>Status</th>
                 </tr>
-                TODO ▣ - use this
                 {% for task in tasks %}
                     <tr>
-                        <td class="checkbox">☐</td>
-                        <td><a href="{% url 'show_task' task.id %}">{{ task.name }}</a></td>
+                        <td class="checkbox" title="Mark as finished">☐</td>
+                        <td class="task_name">{{ task.name }}</td>
                         <td>{{ task.deadline }}</td>
                         <td>{{ task.priority }}</td>
                         <td>{{ task.assigned_to }}</td>
-                        <td>{{ task.status }}</td>
                     </tr>
                 {% empty %}
                     <tr>
@@ -44,10 +41,9 @@
         </div>
 
         <div class="tasks_stats">
-            <strong>STATISTICS</strong>
+            <strong>GLOBAL STATISTICS</strong>
             <p>
                 Finished: {{ stats_finished }} | 
-                In progress: {{ stats_inprogress }} | 
                 To be done: {{ stats_tbd }}
             </p>
         </div>
