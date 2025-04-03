@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django import forms
-from .models import Task
+from .models import Task, User
 
 class TaskForm(ModelForm):
     class Meta:
@@ -14,5 +14,7 @@ class TaskForm(ModelForm):
         ]
         
         widgets = {
+            "name": forms.TextInput(attrs={"placeholder": "Enter name"}),
+            "description": forms.Textarea(attrs={"placeholder": "Enter description"}),
             "deadline": forms.DateInput(attrs={"type": "date"}),
         }

@@ -1,5 +1,8 @@
+import random
+import string
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.core.mail import send_mail
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
@@ -26,9 +29,8 @@ def login_view(request):
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
-            return render(request, "tasks/login.html", {
-                "message": "Invalid username and/or password."
-            })
+            messages.warning(request, "Invalid username and/or password.")
+            return render(request, "tasks/login.html")
     else:
         return render(request, "tasks/login.html")
     
@@ -43,22 +45,19 @@ def register_admin_view(request):
 
         # Check whether the data was inputted correctly
         if not username or not email or not password or not confirmation:
-            return render(request, "tasks/register.html", {
-                "message": "All fields are required.",
-            })
+            messages.warning(request, "All fields are required.")
+            return render(request, "tasks/register.html")
 
         if password != confirmation:
-            return render(request, "tasks/register.html", {
-                "message": "Passwords must match.",
-            })
+            messages.warning(request, "Passwords must match.")
+            return render(request, "tasks/register.html")
 
         # Validate email
         try:
             validate_email(email)
         except ValidationError:
-            return render(request, "tasks/register.html", {
-                "message": "Invalid email address format.",
-            })
+            messages.warning(request, "Invalid email address format.")
+            return render(request, "tasks/register.html")
 
         # Attempt to create new user
         try:
@@ -68,9 +67,9 @@ def register_admin_view(request):
                 user.company = company
                 user.save()
         except IntegrityError:
-            return render(request, "tasks/register.html", {
-                "message": "Username already taken.",
-            })
+            messages.warning(request, "Username already taken")
+            return render(request, "tasks/register.html")
+        
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
@@ -130,3 +129,41 @@ def show_task(request, id): #TODO - maybe delete this and use modal instead
     else:
         messages.warning(request, "Unauthorized")
         return HttpResponseRedirect(reverse('index'))
+
+
+@login_required
+def new_user(request):
+    if request.method == "POST" and request.user.role == "Admin":
+        username = request.POST["username"]
+        email = request.POST["email"]
+        password = request.POST["password"]
+        confirmation = request.POST["confirmation"]
+
+        if not username or not email or not password or not confirmation:
+            messages.warning(request, "All fields are required.")
+            return render(request, "tasks/register.html")
+
+        try:
+            validate_email(email)
+        except ValidationError:
+            messages.warning(request, "Incorrect email")
+            return HttpResponseRedirect(reverse('new_user'))
+        
+        if password != confirmation:
+            messages.warning(request, "Passwords must match.")
+            return HttpResponseRedirect(reverse('new_user'))
+        
+        new_user = User.objects.create_user(
+            username = username,
+            email = email,
+            password = password,
+        )
+        new_user.boss.set([request.user])
+
+        messages.success(request, "User created.")
+        return HttpResponseRedirect(reverse('new_user'))
+    else:
+        users = User.objects.filter(boss=request.user)
+        return render(request, "tasks/new_user.html", {
+            "users": users
+        })

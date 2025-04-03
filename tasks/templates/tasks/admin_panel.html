@@ -3,48 +3,52 @@
 {% block body %}
 
     <div class="admin_panel">
-        <h2><strong>ADMIN PANEL</strong></h2>
-
-        <div class="new_task">
-            CREATE AND ASSIGN NEW TASK
-            <form action="{% url 'add_assign_task' %}" method="post">
-                {% csrf_token %}
-                {{ task_form}}
-                <button type="submit">Submit</button>
-            </form>
+        <div>
+            <h2><strong>CREATE AND ASSIGN NEW TASK</strong></h2>
+            <div class="new_task">
+                <form action="{% url 'add_assign_task' %}" method="post">
+                    {% csrf_token %}
+                    {{ task_form}}
+                    <button type="submit" id="submit_button">Submit</button>
+                </form>
+            </div>
         </div>
 
-        <div class="all_tasks">
-            <h2><strong>ALL UNFINISHED TASKS</strong></h2>
-            <table class="tasks_table">
-                <tr>
-                    <th>✓</th>
-                    <th class="name">Name</th>
-                    <th>Deadline</th>
-                    <th>Priority</th>
-                    <th>Assigned to</th>
-                </tr>
-                {% for task in tasks %}
+        <div class="all_tasks_div">
+            <div>
+                <h2 id="unfinished"><strong>ALL UNFINISHED TASKS</strong></h2>
+            </div>
+            <div class="all_tasks">
+                <table class="tasks_table">
                     <tr>
-                        <td class="checkbox" title="Mark as finished">☐</td>
-                        <td class="task_name">{{ task.name }}</td>
-                        <td>{{ task.deadline }}</td>
-                        <td>{{ task.priority }}</td>
-                        <td>{{ task.assigned_to }}</td>
+                        <th>✓</th>
+                        <th class="name">Name</th>
+                        <th>Deadline</th>
+                        <th>Priority</th>
+                        <th>Assigned to</th>
                     </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="6" style="text-align: center;">No tasks available</td>
-                    </tr>
-                {% endfor %}
-            </table>
+                    {% for task in tasks %}
+                        <tr>
+                            <td class="checkbox" title="Mark as finished">☐</td>
+                            <td class="task_name">{{ task.name }}</td>
+                            <td>{{ task.deadline }}</td>
+                            <td>{{ task.priority }}</td>
+                            <td>{{ task.assigned_to }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" style="text-align: center;">No tasks available</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
         </div>
 
         <div class="tasks_stats">
             <strong>GLOBAL STATISTICS</strong>
             <p>
-                Finished: {{ stats_finished }} | 
-                To be done: {{ stats_tbd }}
+            Finished: {{ stats_finished }} | 
+            To be done: {{ stats_tbd }} 
             </p>
         </div>
 

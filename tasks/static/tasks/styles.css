@@ -2,10 +2,16 @@
 
 #body_logged_out {
     margin: 20px;
+    font-family: Poppins, sans-serif;
 }
 
 
 /* GLOBAL */
+
+body {
+    font-family: Poppins, sans-serif;
+}
+
 
 a {
     color: rgb(255, 255, 255);
@@ -48,23 +54,82 @@ div {
     /* NEW TASK */
 
     .new_task {
-        background-color: rgb(146, 111, 111);
         height: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
+
+    .new_task #id_name, #id_deadline, #id_priority, #id_assigned_to,  #id_description {
+        width: 500px;
+        display: block;
+    }
+
+    .new_task #id_description {
+        height: 60px;
+    }
+
+    #submit_button {
+        margin-top: 5px;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        width: 100px;
+    }
+
+    #submit_button:hover {
+        background-color: #464646;
+    }
+
 
     /* DISPLAY ALL TASKS */
 
-    .all_tasks {
-        margin-top: 20px;
+    .all_tasks_div {
+        margin-top: 10px;
         height: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
     }
 
-    .tasks_table {
+    table {
         width: 100%;
     }
 
+    .all_tasks {
+        overflow-y: auto;
+        display: block;
+        height: 300px;
+        max-height: 300px;
+        width: 70%;
+      }
+
+    .all_tasks::-webkit-scrollbar {
+        background-color: #1c1f22;
+        width: 5px;
+    }
+
+    .all_tasks::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+      }
+
     .tasks_table th {
         background-color: #1c1f22;
+    }
+
+    .tasks_table td {
+        height: 40px;
+        padding: 10px;
+    }
+
+    .tasks_table tr:nth-child(even) {
+        background-color: #3f3f3f;
+    }
+
+    .tasks_table tr:nth-child(odd) {
+        background-color: #242424;
     }
 
     .tasks_table .name {
