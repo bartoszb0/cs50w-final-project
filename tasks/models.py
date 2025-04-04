@@ -10,7 +10,7 @@ STATUS_CHOICES = [('To be done', 'To be done'), ('Done', 'Done')]
 # Create your models here.
 class User(AbstractUser):
     role = models.CharField(max_length=5 ,choices=ROLE_CHOICES, default='Staff')
-    company = models.CharField(max_length=32, blank=True)
+    #company = models.CharField(max_length=32, blank=True)
     boss = models.ManyToManyField("self", blank=True, symmetrical=False, related_name="boss_of_user")
 
 class Task(models.Model):

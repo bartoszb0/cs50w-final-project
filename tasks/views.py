@@ -1,12 +1,6 @@
-import random
-import string
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from django.core.mail import send_mail
-from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
-from django.core.validators import validate_email
-from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import render
@@ -14,6 +8,8 @@ from django.shortcuts import render
 from .forms import TaskForm
 
 from .models import User, Task
+
+from .helpers import create_new_user, admin_required
 
 # Create your views here.
 def login_view(request):
@@ -39,39 +35,21 @@ def register_admin_view(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
-        company = request.POST["company"]
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
 
-        # Check whether the data was inputted correctly
-        if not username or not email or not password or not confirmation:
-            messages.warning(request, "All fields are required.")
-            return render(request, "tasks/register.html")
-
-        if password != confirmation:
-            messages.warning(request, "Passwords must match.")
-            return render(request, "tasks/register.html")
-
-        # Validate email
-        try:
-            validate_email(email)
-        except ValidationError:
-            messages.warning(request, "Invalid email address format.")
-            return render(request, "tasks/register.html")
-
-        # Attempt to create new user
-        try:
-            user = User.objects.create_user(username, email, password, role='Admin')
-            user.save()
-            if company != "":
-                user.company = company
-                user.save()
-        except IntegrityError:
-            messages.warning(request, "Username already taken")
-            return render(request, "tasks/register.html")
-        
-        login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        if not create_new_user(
+            request,
+            username = username,
+            email = email,
+            password = password,
+            confirmation = confirmation,
+            role = "Admin"
+        ):
+            return HttpResponseRedirect(reverse("register"))
+        else:
+            messages.success(request, "Admin account created. Log in")
+            return HttpResponseRedirect(reverse("register"))
     else:
         return render(request, "tasks/register.html")
 
@@ -98,8 +76,9 @@ def index(request):
     
 
 @login_required
+@admin_required # think about this? maybe use this for user to give himself a task as well
 def add_assign_task(request):
-    if request.method == "POST" and request.user.role == "Admin":
+    if request.method == "POST":
         form = TaskForm(request.POST)
         if form.is_valid():
             new_task = Task(
@@ -131,7 +110,8 @@ def show_task(request, id): #TODO - maybe delete this and use modal instead
         return HttpResponseRedirect(reverse('index'))
 
 
-@login_required
+@login_required # TODO make this available only for admin xd
+@admin_required
 def new_user(request):
     if request.method == "POST" and request.user.role == "Admin":
         username = request.POST["username"]
@@ -139,29 +119,20 @@ def new_user(request):
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
 
-        if not username or not email or not password or not confirmation:
-            messages.warning(request, "All fields are required.")
-            return render(request, "tasks/register.html")
+        print(request.POST)
 
-        try:
-            validate_email(email)
-        except ValidationError:
-            messages.warning(request, "Incorrect email")
-            return HttpResponseRedirect(reverse('new_user'))
-        
-        if password != confirmation:
-            messages.warning(request, "Passwords must match.")
-            return HttpResponseRedirect(reverse('new_user'))
-        
-        new_user = User.objects.create_user(
+        if not create_new_user(
+            request,
             username = username,
             email = email,
             password = password,
-        )
-        new_user.boss.set([request.user])
+            confirmation = confirmation,
+        ):
+            return HttpResponseRedirect(reverse("new_user"))
+        else:
+            messages.success(request, "User created.")
+            return HttpResponseRedirect(reverse('new_user'))
 
-        messages.success(request, "User created.")
-        return HttpResponseRedirect(reverse('new_user'))
     else:
         users = User.objects.filter(boss=request.user)
         return render(request, "tasks/new_user.html", {
