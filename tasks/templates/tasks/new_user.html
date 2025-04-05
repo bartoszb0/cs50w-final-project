@@ -2,24 +2,40 @@
 
 {% block body %}
 
-    <h2><strong>All users</strong></h2>
-    {% for user in users %}
-        {{ user }}
-        <p></p>
-    {% endfor %}
+    <div class="new_user_main"> <!-- whole page-->
 
-    <h2><strong>Create new user</strong></h2>
-    <form action="{% url 'new_user' %}" method="post">
-        {% csrf_token %}
-        Username:<p></p><input required type="text" name="username">
-        <p></p>
-        Email:<p></p><input required type="email" name="email">
-        <p></p>
-        Password:<p></p><input required type="password" name="password">
-        <p></p>
-        Confirm password:<p></p><input required type="password" name="confirmation">
-        <p></p>
-        <button type="submit" id="submit_button">Create</button>
-    </form>
+        <div> <!-- right div-->
+            <h2><strong>All users</strong></h2>
+            {% for user in users %}
+                {{ user }}
+                <p></p>
+            {% endfor %}
+        </div>
+
+        <div> <!-- left div-->
+
+            <div> <!-- upper left div -->
+                <h2><strong>Create new user</strong></h2>
+                <form action="{% url 'new_user' %}" method="post">
+                    {% csrf_token %}
+                    Username:<p></p><input required type="text" name="username">
+                    <p></p>
+                    Email:<p></p><input required type="email" name="email">
+                    <p></p>
+                    Password:<p></p><input required type="password" name="password">
+                    <p></p>
+                    Confirm password:<p></p><input required type="password" name="confirmation">
+                    <p></p>
+                    <button type="submit" id="submit_button">Create</button>
+                </form>
+            </div>
+
+            <div> <!-- bottom left div-->
+                <h2><strong>Tasks</strong></h2>
+            </div>
+
+        </div>
+
+    </div>
 
 {% endblock %}

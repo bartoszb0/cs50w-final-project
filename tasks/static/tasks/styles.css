@@ -29,16 +29,10 @@ div {
 
 /* INDEX - VIEW FOR USERS */
 .navbar.navbar-expand-lg.navbar-dark {
-    height: 80px;
     background-color: #30353a;
     padding-left: 20px;
     padding-right: 20px;
 }
-
-.navbar-collapse.collapse.show {
-    height: 200px;
-}
-
 
 /* ADMIN PANEL */
 
