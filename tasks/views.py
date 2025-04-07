@@ -1,7 +1,8 @@
+import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.shortcuts import render
 
@@ -68,7 +69,8 @@ def index(request):
     else:
         return render(request, "tasks/admin_panel.html", {
             "task_form": TaskForm,
-            "tasks": Task.objects.filter(assigned_by=request.user).exclude(status="Done").order_by("deadline"),
+            "unfinished_tasks": Task.objects.filter(assigned_by=request.user).exclude(status="Done").order_by("deadline"),
+            "finished_tasks": Task.objects.filter(assigned_by=request.user).exclude(status="To be done").order_by("deadline"),
             "stats_finished": Task.objects.filter(assigned_by=request.user, status="Done").count(),
             "stats_tbd": Task.objects.filter(assigned_by=request.user, status="To be done").count(),
         })
@@ -135,3 +137,21 @@ def new_user(request):
         return render(request, "tasks/new_user.html", {
             "users": users
         })
+    
+
+# walidacja do zaznaczenia zadania jako skonczone - request.user musi byc w assigned to albo assigned by
+def marktask(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        task = Task.objects.get(id=data["task_id"])
+        
+        if task.assigned_by == request.user or task.assigned_to == request.user:
+            if task.status == 'To be done':
+                task.status = 'Done'
+            else:
+                task.status = 'To be done'
+            task.save()
+
+        return JsonResponse({}, status=201)
+    else:
+        return HttpResponseRedirect(reverse('index'))
