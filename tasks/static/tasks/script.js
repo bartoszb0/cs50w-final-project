@@ -61,31 +61,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 
-    // Change shown table (finished or unfinished)
-    const finished_heading = document.querySelector('#finished')
-    const unfinished_heading = document.querySelector('#unfinished')
-    const finished_table = document.querySelector('#finished_table')
-    const unfinished_table = document.querySelector('#unfinished_table')
-
-
-    finished_table.style.display = 'none';
-    finished_heading.classList.add('hidden')
-
-    unfinished_heading.addEventListener('click', function() {
-        finished_table.style.display = 'none';
-        unfinished_table.style.display = 'block';
-        this.classList.remove('hidden');
-        finished_heading.classList.add('hidden');
-    });
-
-    finished_heading.addEventListener('click', function() {
-        finished_table.style.display = 'block';
-        unfinished_table.style.display = 'none';
-        this.classList.remove('hidden');
-        unfinished_heading.classList.add('hidden');
-    });
-
-
     // Open and close modal for task
     document.querySelectorAll('.task_name').forEach(function(element) {
         element.addEventListener('click', function() {

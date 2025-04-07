@@ -17,7 +17,7 @@
         <div class="all_tasks_div">
             <div id="heading_tasks">
                 <div id="left"><h2 id="unfinished"><strong>UNFINISHED TASKS</strong></h2></div>
-                <div id="right"><h2 id="finished"><strong>FINISHED TASKS</strong></h2></div>
+                <div id="right"><h2 id="finished"><a href="{% url 'index' %}"><strong class="hidden">FINISHED TASKS</strong></a></h2></div>
             </div>
             <div class="all_tasks">
                 <table class="tasks_table" id="unfinished_table">
@@ -31,44 +31,6 @@
                     {% for task in unfinished_tasks %}
                         <tr>
                             <td class="checkbox" title="Mark as finished" content="{{ csrf_token }}">☐</td>
-                            <td><span class="task_name" data-task-id="{{ task.id }}">{{ task.name }}</span></td>
-                            <td class="deadline">{{ task.deadline }}</td>
-                            <td class="priority">{{ task.priority }}</td>
-                            <td>{{ task.assigned_to }}</td>
-                        </tr>
-                        <div class="myModal-container" id="modal-{{ task.id }}">
-                            <div class="myModal">
-                                <h1>{{ task.name }}</h1>
-                                <p>Assigned by: {{ task.assigned_by }}</p>
-                                {% if task.description %}
-                                    <p>{{ task.description }}</p>
-                                {% else %}
-                                    <i>No description</i>
-                                {% endif %}
-                                <div>
-                                    <button class="close" data-task-id="{{ task.id }}">
-                                        Close
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    {% empty %}
-                        <tr>
-                            <td colspan="6" style="text-align: center;">No tasks available</td>
-                        </tr>
-                    {% endfor %}
-                </table>
-                <table class="tasks_table" id="finished_table">
-                    <tr>
-                        <th>✓</th>
-                        <th class="name">Name</th>
-                        <th>Deadline</th>
-                        <th>Priority</th>
-                        <th>Assigned to</th>
-                    </tr>
-                    {% for task in finished_tasks %}
-                        <tr>
-                            <td class="checkbox" content="{{ csrf_token }}">▣</td>
                             <td><span class="task_name" data-task-id="{{ task.id }}">{{ task.name }}</span></td>
                             <td class="deadline">{{ task.deadline }}</td>
                             <td class="priority">{{ task.priority }}</td>
