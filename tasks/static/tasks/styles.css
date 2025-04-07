@@ -139,9 +139,67 @@ div {
         cursor: pointer;
     }
 
+    /* MODAL FOR TASKS */
+
+    .myModal-container {
+        opacity: 0;
+        pointer-events: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: opacity 0.3s ease;
+    }
+
+    .myModal-container.show {
+        pointer-events: auto;
+        opacity: 1;
+    }
+
+    .myModal {
+        background-color: #2d3033;
+        border-radius: 5px ;
+        padding: 30px 50px;
+        width: 50%;
+        max-width: 100%;
+        text-align: center;
+    }
+
 
     /* STATISTICS */
 
     .tasks_stats {
         margin-top: 20px;
+    }
+
+
+    /* MANAGE STAFF */
+
+    .new_user_main {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .new_user_main .left {
+        width: 50%;
+        height: 90vw;
+    }
+
+    .new_user_main .right {
+        background-color: antiquewhite;
+        width: 50%;
+        height: 90vw;
+    }
+
+    .new_user_main .create {
+        background-color: rgb(238, 204, 160);
+    }
+
+    .new_user_main .tasks {
+        background-color: rgb(151, 112, 61);
     }

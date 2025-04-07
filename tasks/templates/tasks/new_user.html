@@ -4,17 +4,9 @@
 
     <div class="new_user_main"> <!-- whole page-->
 
-        <div> <!-- right div-->
-            <h2><strong>All users</strong></h2>
-            {% for user in users %}
-                {{ user }}
-                <p></p>
-            {% endfor %}
-        </div>
+        <div class="left"> <!-- left div-->
 
-        <div> <!-- left div-->
-
-            <div> <!-- upper left div -->
+            <div class="create"> <!-- upper left div -->
                 <h2><strong>Create new user</strong></h2>
                 <form action="{% url 'new_user' %}" method="post">
                     {% csrf_token %}
@@ -30,10 +22,18 @@
                 </form>
             </div>
 
-            <div> <!-- bottom left div-->
-                <h2><strong>Tasks</strong></h2>
+            <div class="tasks"> <!-- bottom left div-->
+                <h2><strong>Unfinished tasks for user /username/</strong></h2>
             </div>
 
+        </div>
+
+        <div class="right"> <!-- right div-->
+            <h2><strong>All users</strong></h2>
+            {% for user in users %}
+                {{ user }}
+                <p></p>
+            {% endfor %}
         </div>
 
     </div>

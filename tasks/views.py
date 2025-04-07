@@ -14,7 +14,6 @@ from .helpers import create_new_user, admin_required
 # Create your views here.
 def login_view(request):
     if request.method == "POST":
-
         # Attempt to sign user in
         username = request.POST["username"]
         password = request.POST["password"]
@@ -110,16 +109,14 @@ def show_task(request, id): #TODO - maybe delete this and use modal instead
         return HttpResponseRedirect(reverse('index'))
 
 
-@login_required # TODO make this available only for admin xd
+@login_required
 @admin_required
 def new_user(request):
-    if request.method == "POST" and request.user.role == "Admin":
+    if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
-
-        print(request.POST)
 
         if not create_new_user(
             request,

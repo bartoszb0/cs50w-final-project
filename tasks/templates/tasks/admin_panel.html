@@ -30,11 +30,20 @@
                     {% for task in tasks %}
                         <tr>
                             <td class="checkbox" title="Mark as finished">☐</td>
-                            <td class="task_name">{{ task.name }}</td>
-                            <td>{{ task.deadline }}</td>
+                            <td><span class="task_name" data-task-id="{{ task.id }}">{{ task.name }}</span></td>
+                            <td class="deadline">{{ task.deadline }}</td>
                             <td>{{ task.priority }}</td>
                             <td>{{ task.assigned_to }}</td>
                         </tr>
+                        <div class="myModal-container" id="modal-{{ task.id }}">
+                            <div class="myModal">
+                                <h1>{{ task.name }}</h1>
+                                <p>{{ task.description }}</p>
+                                <button class="close" data-task-id="{{ task.id }}">
+                                    Close me
+                                </button>
+                            </div>
+                        </div>
                     {% empty %}
                         <tr>
                             <td colspan="6" style="text-align: center;">No tasks available</td>
