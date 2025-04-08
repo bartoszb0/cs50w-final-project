@@ -2,9 +2,9 @@ import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.urls import reverse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from .forms import TaskForm
 
@@ -63,9 +63,7 @@ def logout_view(request):
 @login_required
 def index(request):
     if request.user.role != "Admin":
-        return render(request, "tasks/index.html", {
-            "username": request.user.username
-        })
+        return HttpResponseRedirect(reverse('index_user', args=[request.user.username]))
     else:
         return render(request, "tasks/admin_panel.html", {
             "task_form": TaskForm,
@@ -74,7 +72,20 @@ def index(request):
             "stats_finished": Task.objects.filter(assigned_by=request.user, status="Done").count(),
             "stats_tbd": Task.objects.filter(assigned_by=request.user, status="To be done").count(),
         })
-    
+
+@login_required
+def index_user(request, username):
+    user = User.objects.get(username=username)
+    boss = user.boss.first()
+    # Only user and his boss have access to his tasks
+    if request.user == boss or request.user == user:
+        return render(request, "tasks/user.html", {
+            "unfinished_tasks": Task.objects.filter(assigned_to=user).exclude(status="Done").order_by("deadline"),
+            "finished_tasks": Task.objects.filter(assigned_to=user).exclude(status="To be done").order_by("deadline"),
+        })
+    else:
+        return HttpResponseRedirect(reverse('index_user', args=[request.user.username]))
+        
 
 @login_required
 @admin_required # think about this? maybe use this for user to give himself a task as well
@@ -136,11 +147,12 @@ def new_user(request):
         users = User.objects.filter(boss=request.user)
         return render(request, "tasks/new_user.html", {
             "users": users,
-             "unfinished_tasks": Task.objects.filter(assigned_by=request.user).exclude(status="Done").order_by("deadline"),
+            "unfinished_tasks": Task.objects.filter(assigned_by=request.user).exclude(status="Done").order_by("deadline"),
         })
     
 
 # walidacja do zaznaczenia zadania jako skonczone - request.user musi byc w assigned to albo assigned by
+@login_required
 def marktask(request):
     if request.method == "POST":
         data = json.loads(request.body)

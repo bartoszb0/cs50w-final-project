@@ -243,3 +243,9 @@ div {
         padding: 5px;
         text-align: center;
     }
+
+    /* USER BODY */
+
+    .user_body {
+        text-align: center;
+    }

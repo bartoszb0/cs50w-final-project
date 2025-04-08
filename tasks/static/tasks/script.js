@@ -31,15 +31,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.parentElement.style.color = 'grey';
             } else if ((this.innerHTML === '▣')) {
                 this.innerHTML = '☐'
-                this.parentElement.style.color = '#dee2e6';          
+                this.parentElement.style.color = '#dee2e6';       
             }
-            mark_task(element);
+            mark_task(this);
+            if (window.location.pathname === '/') {
+                stats_change(this)
+            }
         })
     });
 
+    function stats_change(element) {
+        let tbd = document.querySelector('#stats_tbd')
+        let finished = document.querySelector('#stats_finished')
+
+        if (element.innerHTML === '☐') {
+            tbd.innerHTML = parseInt(tbd.innerHTML) + 1;
+            finished.innerHTML = parseInt(finished.innerHTML) - 1;
+        } else if ((element.innerHTML === '▣')) { 
+            tbd.innerHTML = parseInt(tbd.innerHTML) - 1;
+            finished.innerHTML = parseInt(finished.innerHTML) + 1;
+        }
+    }
+
+
+
     function mark_task(element) {
         const id = element.parentElement.querySelector('.task_name').getAttribute('data-task-id');
-        const csrf_token = element.getAttribute('content')
+        const csrf_token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
 
         fetch('marktask', {
             method: 'POST',
@@ -78,14 +97,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Show unfinished tasks for different users on new_user
     if (window.location.pathname === '/new_user') {
-        console.log(document.querySelector('.user').getAttribute('content')) // wyswietla pierwszego
+        window.addEventListener('load', function() {
+            fetchTasks(document.querySelector('.user').getAttribute('content'));
+        })
 
         document.querySelectorAll('.user').forEach(function(element) {
             element.addEventListener('click', function() {
-                const username = element.getAttribute('content')
-                console.log(username)
+                fetchTasks(element.getAttribute('content'))
+                
             })
         })
+    }
+
+    function fetchTasks(username) {
+        const csrf_token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        console.log(username)
     }
 
 

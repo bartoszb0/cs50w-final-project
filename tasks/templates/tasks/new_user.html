@@ -21,21 +21,24 @@
                     <button type="submit" id="submit_button">Create</button>
                 </form>
             </div>
-
-            <div class="tasks"> <!-- bottom left div-->
-                <h2><strong>Unfinished tasks for user /username/</strong></h2>
-
-                {% include 'tasks/display_tables.html' %}
-                
-            </div>
-
         </div>
 
         <div class="right"> <!-- right div-->
             <h2><strong>All users</strong></h2>
-            {% for user in users %}
-                <p class="user" content="{{ user }}">{{ user }}</p>
-            {% endfor %}
+            <table class="tasks_table" style="width: 50%">
+                <tr style="color: #dee2e6">
+                    <th>Username</th>
+                </tr>
+                {% for user in users %}
+                    <tr>
+                        <td><a href="{% url 'index_user' user.username %}">{{ user.username }}</a></td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="1" style="text-align: center;">No tasks available</td>
+                    </tr>
+                {% endfor %}
+            </table>
         </div>
 
     </div>

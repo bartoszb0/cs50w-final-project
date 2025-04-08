@@ -1,0 +1,22 @@
+{% extends "tasks/layout.html" %}
+
+{% block body %}
+
+    <div class="user_body">
+
+        <h1>Tasks for {{ user }}</h1>
+
+        <div class="all_tasks_div">
+            <div id="heading_tasks">
+                <div id="left"><h2 id="unfinished"><strong>UNFINISHED TASKS</strong></h2></div>
+                <div id="right"><h2 id="finished"><strong>FINISHED TASKS</strong></h2></div>
+            </div>
+            
+            {% include 'tasks/display_tables.html' %}
+            
+        </div>
+
+    </div>
+
+
+{% endblock %}

@@ -9,11 +9,11 @@
         </tr>
         {% for task in unfinished_tasks %}
             <tr>
-                <td class="checkbox" title="Mark as finished" content="{{ csrf_token }}">☐</td>
+                <td class="checkbox" title="Mark as finished">☐</td>
                 <td><span class="task_name" data-task-id="{{ task.id }}">{{ task.name }}</span></td>
                 <td class="deadline">{{ task.deadline }}</td>
                 <td class="priority">{{ task.priority }}</td>
-                <td>{{ task.assigned_to }}</td>
+                <td><a href="{% url 'index_user' task.assigned_to.username %}">{{ task.assigned_to }}</a></td>
             </tr>
             <div class="myModal-container" id="modal-{{ task.id }}">
                 <div class="myModal">
@@ -33,7 +33,7 @@
             </div>
         {% empty %}
             <tr>
-                <td colspan="6" style="text-align: center;">No tasks available</td>
+                <td colspan="5" style="text-align: center;">No tasks available</td>
             </tr>
         {% endfor %}
     </table>
@@ -50,11 +50,11 @@
         </tr>
         {% for task in finished_tasks %}
             <tr>
-                <td class="checkbox" title="Mark as finished" content="{{ csrf_token }}">▣</td>
+                <td class="checkbox" title="Mark as finished">▣</td>
                 <td><span class="task_name" data-task-id="{{ task.id }}">{{ task.name }}</span></td>
                 <td class="deadline">{{ task.deadline }}</td>
                 <td class="priority">{{ task.priority }}</td>
-                <td>{{ task.assigned_to }}</td>
+                <td><a href="{% url 'index_user' task.assigned_to.username %}">{{ task.assigned_to }}</a></td>
             </tr>
             <div class="myModal-container" id="modal-{{ task.id }}">
                 <div class="myModal">
