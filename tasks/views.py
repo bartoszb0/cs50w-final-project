@@ -135,7 +135,8 @@ def new_user(request):
     else:
         users = User.objects.filter(boss=request.user)
         return render(request, "tasks/new_user.html", {
-            "users": users
+            "users": users,
+             "unfinished_tasks": Task.objects.filter(assigned_by=request.user).exclude(status="Done").order_by("deadline"),
         })
     
 

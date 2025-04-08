@@ -76,4 +76,42 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
+    // Show unfinished tasks for different users on new_user
+    if (window.location.pathname === '/new_user') {
+        console.log(document.querySelector('.user').getAttribute('content')) // wyswietla pierwszego
+
+        document.querySelectorAll('.user').forEach(function(element) {
+            element.addEventListener('click', function() {
+                const username = element.getAttribute('content')
+                console.log(username)
+            })
+        })
+    }
+
+
+
+    // Display UNFINISHED or FINISHED TASKS
+    const finished_but = document.querySelector('#finished')
+    const finished_tab = document.querySelector('#finished_div')
+
+    const unfinished_tab = document.querySelector('#unfinished_div')
+    const unfinished_but = document.querySelector('#unfinished')
+
+    finished_tab.style.display = 'none';
+    finished_but.classList.add('hidden');
+
+    finished_but.addEventListener('click', function() {
+        finished_but.classList.remove('hidden');
+        unfinished_but.classList.add('hidden');
+        unfinished_tab.style.display = 'none';
+        finished_tab.style.display = 'block';
+    });
+
+    unfinished_but.addEventListener('click', function() {
+        unfinished_but.classList.remove('hidden');
+        finished_but.classList.add('hidden');
+        finished_tab.style.display = 'none';
+        unfinished_tab.style.display = 'block';
+    })
+
 })

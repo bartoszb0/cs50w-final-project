@@ -24,6 +24,9 @@
 
             <div class="tasks"> <!-- bottom left div-->
                 <h2><strong>Unfinished tasks for user /username/</strong></h2>
+
+                {% include 'tasks/display_tables.html' %}
+                
             </div>
 
         </div>
@@ -31,8 +34,7 @@
         <div class="right"> <!-- right div-->
             <h2><strong>All users</strong></h2>
             {% for user in users %}
-                {{ user }}
-                <p></p>
+                <p class="user" content="{{ user }}">{{ user }}</p>
             {% endfor %}
         </div>
 

@@ -93,6 +93,7 @@ div {
         margin: 0;
         min-width: 70%;
         overflow-wrap: break-word;
+        color: #dfdfdf;
     }
 
     #heading_tasks #left {
@@ -147,6 +148,10 @@ div {
     .tasks_table td {
         height: 40px;
         padding: 10px;
+    }
+
+    #finished_div tr {
+        color: grey;
     }
 
     .tasks_table tr:nth-child(even) {
@@ -229,15 +234,12 @@ div {
     }
 
     .new_user_main .right {
-        background-color: antiquewhite;
         width: 50%;
         height: 90vw;
     }
 
-    .new_user_main .create {
-        background-color: rgb(238, 204, 160);
-    }
-
-    .new_user_main .tasks {
-        background-color: rgb(151, 112, 61);
+    .new_user_main .tasks .all_tasks {
+        width: 100%;
+        padding: 5px;
+        text-align: center;
     }
