@@ -34,9 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.parentElement.style.color = '#dee2e6';       
             }
             mark_task(this);
-            if (window.location.pathname === '/') {
-                stats_change(this)
-            }
+            stats_change(this)
         })
     });
 
@@ -137,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             console.error('Error:', error);
         });
-        location.reload();
+        location.reload()
     }
 
 

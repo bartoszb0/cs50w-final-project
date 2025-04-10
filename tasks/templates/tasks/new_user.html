@@ -3,6 +3,29 @@
 {% block body %}
 
     <div class="new_user_main"> <!-- whole page-->
+        <div class="create_user_form">
+            <h2><strong>Create new user</strong></h2>
+            <form action="{% url 'new_user' %}" method="post" id="user_form">
+                {% csrf_token %}
+                <div>
+                    <input required type="text" name="username" placeholder="Username">
+                </div>
+    
+                <div>
+                    <input required type="email" name="email" placeholder="Email">
+                </div>
+    
+                <div>
+                    <input required type="password" name="password" placeholder="Password">
+                </div>
+                
+                <div>
+                    <input required type="password" name="confirmation" placeholder="Confim password">
+                </div>
+    
+                <button type="submit" id="submit_button">Create</button>
+            </form>
+        </div>
 
         <table class="tasks_table" style="width: 50%">
             <h2><strong>Manage users</strong></h2>
@@ -12,7 +35,7 @@
             </tr>
             {% for user in users %}
                 <tr>
-                    <td><a href="{% url 'index_user' user.username %}">{{ user.username }}</a></td>
+                    <td><a href="{% url 'index_user' user.username %}" title="View tasks for {{ user.username }}">{{ user.username }}</a></td>
                     <td>
                         <div>
                             <button class="delete_but">Delete user</button>
@@ -34,33 +57,9 @@
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="1" style="text-align: center;">No tasks available</td>
+                    <td colspan="2" style="text-align: center;">No created users</td>
                 </tr>
             {% endfor %}
-            <tr>
-                <td colspan="2">
-                    <form action="{% url 'new_user' %}" method="post" id="user_form">
-                        {% csrf_token %}
-                        <div>
-                            <input required type="text" name="username" placeholder="Username">
-                        </div>
-        
-                        <div>
-                            <input required type="email" name="email" placeholder="Email">
-                        </div>
-        
-                        <div>
-                            <input required type="password" name="password" placeholder="Password">
-                        </div>
-                        
-                        <div>
-                            <input required type="password" name="confirmation" placeholder="Confim password">
-                        </div>
-        
-                        <button type="submit" id="submit_button">Create New User</button>
-                    </form>
-                </td>
-            </tr>
         </table>
 
 

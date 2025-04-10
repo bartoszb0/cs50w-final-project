@@ -71,7 +71,6 @@ def change_password(request):
             return HttpResponseRedirect(reverse("change_password"))
         
         user = request.user
-        print(f"!!!!!!!!!!!!!!!!!!!!{user}")
 
         if user.check_password(old_password):
             if new_password == confirmation:
@@ -97,7 +96,7 @@ def index(request):
         return HttpResponseRedirect(reverse('index_user', args=[request.user.username]))
     else:
         return render(request, "tasks/admin_panel.html", {
-            "task_form": TaskForm,
+            "task_form": TaskForm(user=request.user),
             "unfinished_tasks": Task.objects.filter(assigned_by=request.user).exclude(status="Done").order_by("deadline"),
             "finished_tasks": Task.objects.filter(assigned_by=request.user).exclude(status="To be done").order_by("deadline"),
             "stats_finished": Task.objects.filter(assigned_by=request.user, status="Done").count(),
@@ -114,6 +113,8 @@ def index_user(request, username):
             "user": user,
             "unfinished_tasks": Task.objects.filter(assigned_to=user).exclude(status="Done").order_by("deadline"),
             "finished_tasks": Task.objects.filter(assigned_to=user).exclude(status="To be done").order_by("deadline"),
+            "stats_finished": Task.objects.filter(assigned_to=user, status="Done").count(),
+            "stats_tbd": Task.objects.filter(assigned_to=user, status="To be done").count(),
         })
     else:
         return HttpResponseRedirect(reverse('index_user', args=[request.user.username]))
@@ -123,7 +124,7 @@ def index_user(request, username):
 @admin_required # think about this? maybe use this for user to give himself a task as well
 def add_assign_task(request):
     if request.method == "POST":
-        form = TaskForm(request.POST)
+        form = TaskForm(request.POST, user=request.user)
         if form.is_valid():
             new_task = Task(
                 name = form.cleaned_data["name"],
