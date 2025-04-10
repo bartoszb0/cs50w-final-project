@@ -5,7 +5,11 @@
             <th class="name">Name</th>
             <th>Deadline</th>
             <th>Priority</th>
-            <th>Assigned to</th>
+            {% if request.user.role == "Admin" %}
+                <th>Assigned to</th>
+            {% else %}
+                <th>Assigned by</th>
+            {% endif %}
         </tr>
         {% for task in unfinished_tasks %}
             <tr>
@@ -13,12 +17,16 @@
                 <td><span class="task_name" data-task-id="{{ task.id }}">{{ task.name }}</span></td>
                 <td class="deadline">{{ task.deadline }}</td>
                 <td class="priority">{{ task.priority }}</td>
-                <td><a href="{% url 'index_user' task.assigned_to.username %}">{{ task.assigned_to }}</a></td>
-            </tr>
+                {% if request.user.role == "Admin" %}
+                    <td><a href="{% url 'index_user' task.assigned_to.username %}">{{ task.assigned_to }}</a></td>
+                {% else %}
+                    <td>{{ task.assigned_by }}</td>
+                {% endif %}            </tr>
             <div class="myModal-container" id="modal-{{ task.id }}">
                 <div class="myModal">
                     <h1>{{ task.name }}</h1>
-                    <p>Assigned by: {{ task.assigned_by }}</p>
+                    <p>Assigned by: {{ task.assigned_by }}<br>
+                        Deadline: {{ task.deadline }}</p>
                     {% if task.description %}
                         <p>{{ task.description }}</p>
                     {% else %}
@@ -46,7 +54,11 @@
             <th class="name">Name</th>
             <th>Deadline</th>
             <th>Priority</th>
-            <th>Assigned to</th>
+            {% if request.user.role == "Admin" %}
+                <th>Assigned to</th>
+            {% else %}
+                <th>Assigned by</th>
+            {% endif %}
         </tr>
         {% for task in finished_tasks %}
             <tr>
@@ -54,12 +66,17 @@
                 <td><span class="task_name" data-task-id="{{ task.id }}">{{ task.name }}</span></td>
                 <td class="deadline">{{ task.deadline }}</td>
                 <td class="priority">{{ task.priority }}</td>
-                <td><a href="{% url 'index_user' task.assigned_to.username %}">{{ task.assigned_to }}</a></td>
+                {% if request.user.role == "Admin" %}
+                    <td><a href="{% url 'index_user' task.assigned_to.username %}">{{ task.assigned_to }}</a></td>
+                {% else %}
+                    <td>{{ task.assigned_by }}</td>
+                {% endif %}
             </tr>
             <div class="myModal-container" id="modal-{{ task.id }}">
                 <div class="myModal">
                     <h1>{{ task.name }}</h1>
-                    <p>Assigned by: {{ task.assigned_by }}</p>
+                    <p>Assigned by: {{ task.assigned_by }}<br>
+                        Deadline: {{ task.deadline }}</p>
                     {% if task.description %}
                         <p>{{ task.description }}</p>
                     {% else %}

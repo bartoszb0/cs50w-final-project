@@ -1,5 +1,5 @@
 import json
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
@@ -59,6 +59,37 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("login"))
 
+@login_required
+def change_password(request):
+    if request.method == "POST":
+        old_password = request.POST["old_password"]
+        new_password = request.POST["new_password"]
+        confirmation = request.POST["confirmation"]
+        
+        if not old_password or not new_password or not confirmation:
+            messages.warning(request, "All fields are required.")
+            return HttpResponseRedirect(reverse("change_password"))
+        
+        user = request.user
+        print(f"!!!!!!!!!!!!!!!!!!!!{user}")
+
+        if user.check_password(old_password):
+            if new_password == confirmation:
+                user.set_password(new_password)
+                user.save()
+                update_session_auth_hash(request, user)
+                messages.success(request, "Password changed succesfully")
+                return HttpResponseRedirect(reverse("change_password"))
+            else:
+                messages.warning(request, "Passwords are not the same")
+                return HttpResponseRedirect(reverse("change_password"))
+        else:
+            messages.warning(request, "Current password is incorrect")
+            return HttpResponseRedirect(reverse("change_password"))
+
+    else:
+        return render(request, "tasks/change_password.html")
+
 
 @login_required
 def index(request):
@@ -76,10 +107,11 @@ def index(request):
 @login_required
 def index_user(request, username):
     user = User.objects.get(username=username)
-    boss = user.boss.first()
+    boss = user.boss.all()
     # Only user and his boss have access to his tasks
-    if request.user == boss or request.user == user:
+    if request.user in boss or request.user == user:
         return render(request, "tasks/user.html", {
+            "user": user,
             "unfinished_tasks": Task.objects.filter(assigned_to=user).exclude(status="Done").order_by("deadline"),
             "finished_tasks": Task.objects.filter(assigned_to=user).exclude(status="To be done").order_by("deadline"),
         })
@@ -112,17 +144,6 @@ def add_assign_task(request):
     
 
 @login_required
-def show_task(request, id): #TODO - maybe delete this and use modal instead
-    task = Task.objects.get(id=id)
-    if task.assigned_to == request.user or task.assigned_by == request.user:
-        messages.success(request, "Authorized")
-        return HttpResponseRedirect(reverse('index'))
-    else:
-        messages.warning(request, "Unauthorized")
-        return HttpResponseRedirect(reverse('index'))
-
-
-@login_required
 @admin_required
 def new_user(request):
     if request.method == "POST":
@@ -142,6 +163,14 @@ def new_user(request):
         else:
             messages.success(request, "User created.")
             return HttpResponseRedirect(reverse('new_user'))
+    
+    elif request.method == "DELETE":
+        data = json.loads(request.body)
+        user = User.objects.get(id=data["user_id"])
+        Task.objects.filter(assigned_to=user).all().delete()
+        user.delete()
+
+        return JsonResponse({}, status=204)
 
     else:
         users = User.objects.filter(boss=request.user)

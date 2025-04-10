@@ -42,6 +42,7 @@ div {
     text-align: center;
     display: flex;
     justify-content: center;
+    align-items: center;
     flex-direction: column;
 }
 
@@ -54,6 +55,13 @@ div {
         justify-content: center;
     }
 
+    #create_task {
+        background-color: #2d3033;
+        border: 1px solid #2d3033;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
     .new_task #id_name, #id_deadline, #id_priority, #id_assigned_to,  #id_description {
         width: 500px;
         display: block;
@@ -63,15 +71,16 @@ div {
         height: 60px;
     }
 
-    #submit_button, .close {
-        margin-top: 5px;
+    #submit_button, .close, .delete_but, .confirm_delete {
+        margin-top: 10px;
+        overflow-wrap: break-word;
         color: white;
         border: none;
         border-radius: 5px;
         width: 100px;
     }
 
-    #submit_button:hover, .close:hover {
+    #submit_button:hover, .close:hover, .delete_but:hover, .confirm_delete:hover {
         background-color: #464646;
     }
 
@@ -224,24 +233,11 @@ div {
     /* MANAGE STAFF */
 
     .new_user_main {
-        display: flex;
-        flex-direction: row;
-    }
-
-    .new_user_main .left {
-        width: 50%;
-        height: 90vw;
-    }
-
-    .new_user_main .right {
-        width: 50%;
-        height: 90vw;
-    }
-
-    .new_user_main .tasks .all_tasks {
-        width: 100%;
-        padding: 5px;
         text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 
     /* USER BODY */
@@ -249,3 +245,45 @@ div {
     .user_body {
         text-align: center;
     }
+
+    .user_body .all_tasks {
+        height: auto;
+        max-height: 650px;
+      }
+
+    .delete_user .delete_but {
+        width: 200px;
+    }
+
+    .delete_but:hover, .confirm_delete:hover {
+        background-color: rgb(129, 55, 55);
+    }
+
+    /* MODAL, DELETE USER */
+    .myModal .confirm_delete {
+        margin-left: 10px;
+    }
+
+    .new_user_main .tasks_table td {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .new_user_main .delete_but {
+        margin-top: 0px;
+    }
+    
+
+
+/* LOGIN, REGISTER, CHANGE PASSWORD FORMS */
+
+.form-group {
+    width: 500px;
+}
+
+.log-div {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

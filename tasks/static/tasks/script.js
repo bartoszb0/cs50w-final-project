@@ -95,25 +95,50 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-    // Show unfinished tasks for different users on new_user
-    if (window.location.pathname === '/new_user') {
-        window.addEventListener('load', function() {
-            fetchTasks(document.querySelector('.user').getAttribute('content'));
+    //Open and close modal for deleting user
+    document.querySelectorAll('.delete_but').forEach(function(element) {
+        element.addEventListener('click', function() {
+            this.parentElement.querySelector('.myModal-container').classList.add('show');
         })
+    })
 
-        document.querySelectorAll('.user').forEach(function(element) {
-            element.addEventListener('click', function() {
-                fetchTasks(element.getAttribute('content'))
-                
+    document.querySelectorAll('.confirm_delete').forEach(function(element) {
+        element.addEventListener('click', function() {
+            delete_user(element.getAttribute('content'))
+        })
+    })
+
+    function delete_user(user_id) {
+        const csrf_token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        fetch('new_user', {
+            method: 'DELETE',
+            headers: {
+                'Content-type': 'application/json',
+                'X-CSRFToken': csrf_token,
+            },
+            body: JSON.stringify({
+                user_id: user_id,
             })
         })
+        .then(response => {
+            if (response.status === 204) {
+                return null;
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data) {
+                console.log('Success:', data);
+            } else {
+                console.log('User deleted successfully.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+        location.reload();
     }
-
-    function fetchTasks(username) {
-        const csrf_token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        console.log(username)
-    }
-
 
 
     // Display UNFINISHED or FINISHED TASKS

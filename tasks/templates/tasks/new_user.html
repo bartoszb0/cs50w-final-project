@@ -4,42 +4,65 @@
 
     <div class="new_user_main"> <!-- whole page-->
 
-        <div class="left"> <!-- left div-->
-
-            <div class="create"> <!-- upper left div -->
-                <h2><strong>Create new user</strong></h2>
-                <form action="{% url 'new_user' %}" method="post">
-                    {% csrf_token %}
-                    Username:<p></p><input required type="text" name="username">
-                    <p></p>
-                    Email:<p></p><input required type="email" name="email">
-                    <p></p>
-                    Password:<p></p><input required type="password" name="password">
-                    <p></p>
-                    Confirm password:<p></p><input required type="password" name="confirmation">
-                    <p></p>
-                    <button type="submit" id="submit_button">Create</button>
-                </form>
-            </div>
-        </div>
-
-        <div class="right"> <!-- right div-->
-            <h2><strong>All users</strong></h2>
-            <table class="tasks_table" style="width: 50%">
-                <tr style="color: #dee2e6">
-                    <th>Username</th>
+        <table class="tasks_table" style="width: 50%">
+            <h2><strong>Manage users</strong></h2>
+            <tr style="color: #dee2e6">
+                <th>Username</th>
+                <th>Delete</th>
+            </tr>
+            {% for user in users %}
+                <tr>
+                    <td><a href="{% url 'index_user' user.username %}">{{ user.username }}</a></td>
+                    <td>
+                        <div>
+                            <button class="delete_but">Delete user</button>
+                            <div class="myModal-container">
+                                <div class="myModal">
+                                    <h1>Are you sure you want to delete <span style="color: rgb(129, 55, 55);">{{ user.username }}'s</span> account and all of his tasks?</h1>
+                                    <div id="buttons">
+                                        <button class="close">
+                                            Go back
+                                        </button>
+                                        <button class="confirm_delete" content="{{ user.id }}">
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
                 </tr>
-                {% for user in users %}
-                    <tr>
-                        <td><a href="{% url 'index_user' user.username %}">{{ user.username }}</a></td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="1" style="text-align: center;">No tasks available</td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
+            {% empty %}
+                <tr>
+                    <td colspan="1" style="text-align: center;">No tasks available</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="2">
+                    <form action="{% url 'new_user' %}" method="post" id="user_form">
+                        {% csrf_token %}
+                        <div>
+                            <input required type="text" name="username" placeholder="Username">
+                        </div>
+        
+                        <div>
+                            <input required type="email" name="email" placeholder="Email">
+                        </div>
+        
+                        <div>
+                            <input required type="password" name="password" placeholder="Password">
+                        </div>
+                        
+                        <div>
+                            <input required type="password" name="confirmation" placeholder="Confim password">
+                        </div>
+        
+                        <button type="submit" id="submit_button">Create New User</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+
 
     </div>
 
