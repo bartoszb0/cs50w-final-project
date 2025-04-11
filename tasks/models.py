@@ -23,3 +23,8 @@ class Task(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+    
+class Progress(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="progress_status")
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=32)

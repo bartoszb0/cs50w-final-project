@@ -2,13 +2,14 @@ import json
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db import DataError
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.urls import reverse
 from django.shortcuts import render, redirect
 
 from .forms import TaskForm
 
-from .models import User, Task
+from .models import User, Task, Progress
 
 from .helpers import create_new_user, admin_required
 
@@ -196,5 +197,29 @@ def marktask(request):
             task.save()
 
         return JsonResponse({}, status=201)
+    else:
+        return HttpResponseRedirect(reverse('index'))
+    
+
+@login_required
+def add_progress(request):
+    if request.method == "POST":
+        task = Task.objects.filter(id=request.POST["id"]).first()
+        
+        if not task:
+            messages.warning(request, "Invalid task ID")
+        elif task.assigned_to != request.user:
+            messages.warning(request, "You are not authorized to update the status of this task.")
+        else:
+            status = request.POST["status"]
+            try:
+                progress = Progress(task=task, status=status)
+                progress.save()
+            except DataError:
+                messages.warning(request, "Max length of progress status is 32")
+                return HttpResponseRedirect(reverse('index'))
+            messages.success(request, "Succesfully added progress status")
+
+        return HttpResponseRedirect(reverse('index'))
     else:
         return HttpResponseRedirect(reverse('index'))

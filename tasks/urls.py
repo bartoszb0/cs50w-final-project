@@ -11,5 +11,6 @@ urlpatterns = [
     path("new_user", views.new_user, name="new_user"),
     path("marktask", views.marktask, name="marktask"),
     path("change_password", views.change_password, name="change_password"),
+    path("add_progress", views.add_progress, name="add_progress"),
     path("<str:username>", views.index_user, name="index_user"),
 ]

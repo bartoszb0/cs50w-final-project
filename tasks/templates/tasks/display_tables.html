@@ -32,7 +32,26 @@
                     {% else %}
                         <i>No description</i>
                     {% endif %}
-                    <div>
+
+                    <div class="progress_div">
+                        {% for progress in task.progress_status.all %}
+                            <p><span class="prog_created">{{ progress.created_at }}</span><br>
+                            <span class="prog_status">{{ progress.status }}</span></p>
+                        {% endfor %}
+                        <div class="submit_progress">
+                            <form action="{% url 'add_progress' %}" method="post">
+                                {% csrf_token %}
+                                <input hidden name="id" value="{{task.id}}">
+                                <input class="input_progress" type="text" name="status" placeholder="Enter progess status">
+                                <input type="submit" hidden>
+                            </form>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="close_div">
                         <button class="close" data-task-id="{{ task.id }}">
                             Close
                         </button>
@@ -82,7 +101,16 @@
                     {% else %}
                         <i>No description</i>
                     {% endif %}
-                    <div>
+
+                    <div class="progress_div">
+                        {% for progress in task.progress_status.all %}
+                            <p><span class="prog_created">{{ progress.created_at }}</span><br>
+                            <span class="prog_status">{{ progress.status }}</span></p>
+                        {% endfor %}
+                    </div>
+
+
+                    <div class="close_div">
                         <button class="close" data-task-id="{{ task.id }}">
                             Close
                         </button>
