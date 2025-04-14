@@ -63,7 +63,8 @@ div {
     }
 
     .new_task #id_name, #id_deadline, #id_priority, #id_assigned_to,  #id_description {
-        width: 500px;
+        max-width: 500px;
+        min-width: 100%;
         display: block;
     }
 
@@ -193,7 +194,8 @@ div {
         top: 0;
         left: 0;
         height: 100vh;
-        width: 100vw;
+        width: 400px;
+        min-width: 100%;
         background-color: rgba(0, 0, 0, 0.5);
         display: flex;
         justify-content: center;
@@ -327,6 +329,8 @@ div {
 
 .submit_progress {
     margin-top: 10px;
+    width: 180px;
+    min-width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -335,3 +339,64 @@ div {
 .input_progress {
     width: 320px;
 }
+
+
+/* MOBILE RESPONSIVE */
+
+@media (max-width: 768px) {
+
+    .form-group {
+      width: 90%;
+    }
+  
+    .myModal {
+      width: 90%;
+      padding: 20px;
+    }
+  
+    .all_tasks {
+      width: 95%;
+    }
+  
+    #heading_tasks {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    #heading_tasks #left,
+    #heading_tasks #right {
+      min-width: 100%;
+      text-align: center;
+    }
+  
+    .submit_progress,
+    .input_progress {
+      width: 100%;
+    }
+  
+    .navbar.navbar-expand-lg.navbar-dark {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  
+    .new_task #id_name,
+    #id_deadline,
+    #id_priority,
+    #id_assigned_to,
+    #id_description {
+      min-width: 100%;
+    }
+  
+    .user_body .all_tasks,
+    .tasks_stats {
+      padding: 10px;
+    }
+  
+    .delete_but,
+    .confirm_delete {
+      width: 100%;
+      max-width: none;
+    }
+  
+  }
+  

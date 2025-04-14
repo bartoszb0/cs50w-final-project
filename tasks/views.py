@@ -50,7 +50,7 @@ def register_admin_view(request):
             return HttpResponseRedirect(reverse("register"))
         else:
             messages.success(request, "Admin account created. Log in")
-            return HttpResponseRedirect(reverse("register"))
+            return HttpResponseRedirect(reverse("login"))
     else:
         return render(request, "tasks/register.html")
 
