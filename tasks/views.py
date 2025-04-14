@@ -122,7 +122,7 @@ def index_user(request, username):
         
 
 @login_required
-@admin_required # think about this? maybe use this for user to give himself a task as well
+@admin_required
 def add_assign_task(request):
     if request.method == "POST":
         form = TaskForm(request.POST, user=request.user)
@@ -182,7 +182,6 @@ def new_user(request):
         })
     
 
-# walidacja do zaznaczenia zadania jako skonczone - request.user musi byc w assigned to albo assigned by
 @login_required
 def marktask(request):
     if request.method == "POST":
